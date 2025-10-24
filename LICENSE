@@ -19,3 +19,19 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+---
+
+## Third-Party Libraries
+
+This software uses the following open-source libraries:
+
+- **boto3** (Apache License 2.0)
+  - https://github.com/boto/boto3
+
+- **cryptography** (Apache License 2.0 / BSD License)
+  - https://github.com/pyca/cryptography
+
+- **PyInstaller** (GPL v2 with special exception for distributed programs)
+  - https://github.com/pyinstaller/pyinstaller
+  - Note: PyInstaller's special exception allows distributing built executables under any license
