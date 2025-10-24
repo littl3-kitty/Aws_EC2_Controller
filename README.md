@@ -1,9 +1,8 @@
 # AWS EC2 Instance Controller
 
-AWS EC2 인스턴스 관리용 프로그램
+AWS EC2 인스턴스 관리용 프로그램(exe) 생성
 
 ## 1. 기능
-
 - 여러 리전의 EC2 인스턴스 조회
 - 인스턴스 시작/중지
 - 자격증명 암호화 저장
