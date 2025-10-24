@@ -26,12 +26,12 @@ SOFTWARE.
 
 This software uses the following open-source libraries:
 
-- **boto3** (Apache License 2.0)
+- boto3 (Apache License 2.0)
   - https://github.com/boto/boto3
 
-- **cryptography** (Apache License 2.0 / BSD License)
+- cryptography (Apache License 2.0 / BSD License)
   - https://github.com/pyca/cryptography
 
-- **PyInstaller** (GPL v2 with special exception for distributed programs)
+- PyInstaller (GPL v2 with special exception for distributed programs)
   - https://github.com/pyinstaller/pyinstaller
   - Note: PyInstaller's special exception allows distributing built executables under any license
