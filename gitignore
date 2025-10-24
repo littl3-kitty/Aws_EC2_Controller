@@ -1,0 +1,16 @@
+# 보안
+.aws_ctrl_cfg
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Build
+dist/
+build/
+*.spec
+
+# OS
+.DS_Store
+Thumbs.db
