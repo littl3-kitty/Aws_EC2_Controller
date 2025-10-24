@@ -11,7 +11,7 @@ AWS EC2 인스턴스 관리용 프로그램
 ## 2. 사용 방법
 
 ### a. 설치방법 (사용 버전 : Python 3.14.0)
-       : cmd 또는 powershell에서 아래 명령 실행
+cmd 또는 powershell에서 아래 명령 실행
 ```bash
 pip install -r requirements.txt
 python aws_controller.py
