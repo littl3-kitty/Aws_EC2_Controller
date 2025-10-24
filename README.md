@@ -1,6 +1,5 @@
 # AWS EC2 Instance Controller
-
-AWS EC2 인스턴스 관리용 프로그램(exe) 생성
+여러 AWS 리전의 EC2 인스턴스를 한 번에 관리할 수 있는 Windows GUI 관리 도구
 
 ## 1. 기능
 - 여러 리전의 EC2 인스턴스 조회
@@ -9,20 +8,22 @@ AWS EC2 인스턴스 관리용 프로그램(exe) 생성
 
 ## 2. 사용 방법
 
-### a. 설치방법 (사용 버전 : Python 3.14.0)
-cmd 또는 powershell에서 아래 명령 실행
-```bash
-pip install -r requirements.txt
-python aws_controller.py
-```
 
-### b. 실행 파일 빌드 (Windows)
+### a. 사전 준비
+1) Python 3.14.0 이상 설치
+2) pip가 정상 작동하는지 확인 (`pip --version`)
 
+3) 보안 주의사항:
+  - AWS Access Key는 제한된 권한(아래 3번 참고)만 부여하세요
+  - 자격증명은 로컬에 암호화되어 저장됩니다 (`~/.aws_ctrl_cfg`)
+  - 해당 파일을 다른 사람과 공유하지 마세요
+
+### b. EXE 파일 빌드(windows)
 ```bash
 build.bat
 ```
-
-빌드된 파일은 `./dist/aws_instance_control.exe`에 생성됩니다.
+- 첫 실행 시 필요한 패키지 자동 설치 (boto3, pyinstaller, cryptography)
+- 빌드 완료 후 `./dist/aws_instance_control.exe` 생성
 
 ### c. 사용법
 
@@ -32,6 +33,7 @@ build.bat
 - All Refresh : 모든 리전의 인스턴스 조회
 - Start : 인스턴스 시작
 - Stop : 인스턴스 중지
+- Terminate : 인스턴스 삭제 (복구 불가!)
 
 ## 3. 필요한 AWS 최소권한
 
@@ -41,8 +43,10 @@ build.bat
   "Action": [
     "ec2:DescribeInstances",
     "ec2:DescribeRegions",
+    "ec2:DescribeInstanceAttribute",
     "ec2:StartInstances",
-    "ec2:StopInstances"
+    "ec2:StopInstances",
+    "ec2:TerminateInstances"
   ],
   "Resource": "*"
 }
