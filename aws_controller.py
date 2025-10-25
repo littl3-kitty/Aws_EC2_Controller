@@ -74,7 +74,7 @@ class App:
         
         self.load_config()
     
-    def get_region_display_name(self, region_code):  # 리전 코드를 표시용 이름으로 변환 (예: ap-northeast-2 -> ap-northeast-2 (Seoul))
+    def get_region_display_name(self, region_code):
         if region_code in self.REGION_NAMES:
             return f"{region_code} ({self.REGION_NAMES[region_code]})"
         return region_code
@@ -137,16 +137,16 @@ class App:
         self.region_filter.pack(side=tk.LEFT)
         self.region_filter.bind('<<ComboboxSelected>>', lambda e: self.filter_instances())
         
-        tree_frame = tk.Frame(list_ui)  # Treeview와 스크롤바를 담을 프레임
+        tree_frame = tk.Frame(list_ui)
         tree_frame.pack(fill=tk.BOTH, expand=True)
         
-        vsb = ttk.Scrollbar(tree_frame, orient="vertical")  # 세로 스크롤바
+        vsb = ttk.Scrollbar(tree_frame, orient="vertical")  # 세로
         vsb.pack(side=tk.RIGHT, fill=tk.Y)
         
-        hsb = ttk.Scrollbar(tree_frame, orient="horizontal")  # 가로 스크롤바
+        hsb = ttk.Scrollbar(tree_frame, orient="horizontal")  # 가로
         hsb.pack(side=tk.BOTTOM, fill=tk.X)
         
-        self.tree = ttk.Treeview(  # height 파라미터 제거하여 창 크기에 따라 자동 조절
+        self.tree = ttk.Treeview(
             tree_frame, 
             columns=('check', 'term_protect', 'stop_protect', 'id', 'name', 'status', 'type', 'region'), 
             show='headings', 
@@ -211,7 +211,7 @@ class App:
         
         values = list(self.tree.item(item)['values'])
         
-        if column == '#1':  # Select 컬럼
+        if column == '#1':
             if item in self.checked:
                 self.checked.remove(item)
                 values[0] = '☐'
@@ -220,7 +220,7 @@ class App:
                 values[0] = '☑'
             self.tree.item(item, values=values)
         
-        elif column in ('#2', '#3'):  # Termination Lock 또는 Stop Lock 컬럼
+        elif column in ('#2', '#3'): 
             instance_id = values[3]
             region = self.extract_region_code(values[7])
             protection_type = 'termination' if column == '#2' else 'stop'
@@ -257,7 +257,7 @@ class App:
                     )
                     protection_name = 'Stop Protection'
                 
-                for inst in self.instances:  # 로컬 리스트 즉시 업데이트
+                for inst in self.instances: 
                     if inst['id'] == instance_id:
                         if protection_type == 'termination':
                             inst['termination_protection'] = enable
@@ -265,9 +265,9 @@ class App:
                             inst['stop_protection'] = enable
                         break
                 
-                self.root.after(0, lambda: self.refresh_specific_region(region))  # 해당 리전만 재조회
+                self.root.after(0, lambda: self.refresh_specific_region(region)) 
                 action = "enabled" if enable else "disabled"
-                self.update_status(f"{protection_name} {action} for {instance_id}")  # 상태바에만 표시
+                self.update_status(f"{protection_name} {action} for {instance_id}") 
             except Exception as e:
                 self.root.after(0, lambda: messagebox.showerror("Error", str(e)))
         
@@ -336,29 +336,29 @@ class App:
         
         if has_transitioning and self.auto_refresh_count < self.AUTO_REFRESH_MAX_COUNT:
             self.auto_refresh_count += 1
-            self.auto_refresh_timer = self.root.after(int(self.AUTO_REFRESH_INTERVAL * 1000), lambda: self.refresh(silent=True))  # 자동 리프레시는 조용히
+            self.auto_refresh_timer = self.root.after(int(self.AUTO_REFRESH_INTERVAL * 1000), lambda: self.refresh(silent=True))
         else:
             self.auto_refresh_count = 0
     
-    def refresh(self, silent=False):  # silent=True일 때 상태 메시지 표시 안함
+    def refresh(self, silent=False): 
         selected_region = self.region_filter.get()
         
-        if selected_region == 'ALL':  # ALL일 때는 현재 로드된 모든 리전 재조회
+        if selected_region == 'ALL': 
             unique_regions = list(set(inst['region'] for inst in self.instances))
             if not unique_regions:
                 return
             for i, region in enumerate(unique_regions):
                 is_last = (i == len(unique_regions) - 1)
-                self.refresh_specific_region(region, auto_refresh=is_last, silent=silent)  # 마지막 리전만 auto_refresh 활성화
+                self.refresh_specific_region(region, auto_refresh=is_last, silent=silent)
             return
         
         region = self.extract_region_code(selected_region)
         self.refresh_specific_region(region, silent=silent)
     
-    def refresh_specific_region(self, region, auto_refresh=True, silent=False):  # 특정 리전만 재조회
+    def refresh_specific_region(self, region, auto_refresh=True, silent=False):
         def run():
             try:
-                if not silent:  # 자동 리프레시가 아닐 때만 상태 표시
+                if not silent:
                     self.update_status("Refreshing instances...")
                 ec2 = self.create_ec2_client(region)
                 resp = ec2.describe_instances()
@@ -388,9 +388,9 @@ class App:
                 self.instances.extend(refreshed)
                 
                 self.root.after(0, self.filter_instances)
-                if not silent:  # 자동 리프레시가 아닐 때만 상태 표시
+                if not silent:
                     self.update_status(f"{len(refreshed)} instances refreshed")
-                if auto_refresh:  # auto_refresh가 True일 때만 호출
+                if auto_refresh:
                     self.root.after(0, self.check_and_auto_refresh)
             except Exception as e:
                 self.root.after(0, lambda: messagebox.showerror("Error", str(e)))
@@ -446,7 +446,7 @@ class App:
                     futures = [executor.submit(check_protection, inst) for inst in temp_instances]
                     self.instances = [future.result() for future in as_completed(futures)]
                 
-                region_list = ['ALL'] + sorted([self.get_region_display_name(r) for r in found_regions])  # 콤보박스에 표시용 리전명 사용
+                region_list = ['ALL'] + sorted([self.get_region_display_name(r) for r in found_regions])
                 self.root.after(0, lambda: self.region_filter.config(values=region_list))
                 self.root.after(0, self.filter_instances)
                 self.update_status(f"{len(self.instances)} instances loaded")
@@ -464,13 +464,13 @@ class App:
             self.tree.delete(item)
         self.checked.clear()
         
-        filtered = [inst for inst in self.instances if selected_region == 'ALL' or inst['region'] == region_code]  # 필터링
+        filtered = [inst for inst in self.instances if selected_region == 'ALL' or inst['region'] == region_code] 
         filtered.sort(key=lambda x: (x['name'].lower() if x['name'] else 'zzz', x['id']))  # 이름순 정렬 (이름 없으면 맨 뒤)
         
         for inst in filtered:
             term_protect_text = '☑' if inst.get('termination_protection') else '☐'
             stop_protect_text = '☑' if inst.get('stop_protection') else '☐'
-            region_display = self.get_region_display_name(inst['region'])  # 리전명을 표시용으로 변환
+            region_display = self.get_region_display_name(inst['region'])
             self.tree.insert('', tk.END, values=('☐', term_protect_text, stop_protect_text, inst['id'], inst['name'], inst['status'], inst['type'], region_display))
     
     def get_selected_instances(self):
@@ -566,7 +566,7 @@ class App:
         
         count = len(instances)
         if not messagebox.askyesno(
-            "⚠️ Confirm Termination",
+            "Confirm Termination",
             f"Are you sure you want to TERMINATE {count} instance(s)?\n\n"
             f"This action CANNOT be undone!\n"
             f"All data on the instance will be permanently deleted.",
