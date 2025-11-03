@@ -1,16 +1,48 @@
 # 보안
 .aws_ctrl_cfg
+.aws_ctrl/
+config/*.yaml
+!config/default.yaml
 
 # Python
 __pycache__/
 *.pyc
 *.pyo
+*.pyd
+.Python
+*.so
+*.egg
+*.egg-info/
+venv/
+.venv/
+env/
+ENV/
 
 # Build
 dist/
 build/
 *.spec
 
+# Test
+.pytest_cache/
+.coverage
+htmlcov/
+test-results/
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
 # OS
 .DS_Store
 Thumbs.db
+
+# Temp
+*.tmp
+*.bak
+deployment_package/
+deployment_package.tar.gz
