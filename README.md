@@ -1,22 +1,26 @@
 # AWS EC2 Instance Controller
-여러 AWS 리전의 EC2 인스턴스를 한 번에 관리할 수 있는 Windows GUI 관리 도구
 
-## 1. 기능
-- 여러 리전의 EC2 인스턴스 조회
-- 인스턴스 시작/중지/삭제
-- 자격증명 암호화 저장
+Multi-region AWS EC2 instance management tool (Windows GUI)
 
-## 2. 사용 방법
-### a. 사용법
-- AWS Access Key와 Secret Key 입력 (`~/.aws_ctrl_cfg`에 암호화 저장)
-- Login 클릭 (모든 리전 인스턴스 조회)
-- Refresh : 현재 불러온 리전/인스턴스만 조회
-- All Refresh : 모든 리전의 인스턴스 조회
-- Start : 인스턴스 시작
-- Stop : 인스턴스 중지
-- Terminate : 인스턴스 삭제 (복구 불가!)
+![Language](https://img.shields.io/badge/Go-00ADD8?logo=go&logoColor=white)
+![Platform](https://img.shields.io/badge/Windows-0078D6?logo=windows&logoColor=white)
 
-### b. 필요한 AWS 최소권한
+## Features
+
+- **Multi-region**: Manage EC2 instances across all AWS regions
+- **Batch operations**: Start/Stop/Terminate multiple instances
+- **Protection**: Toggle termination/stop protection with one click
+- **Security**: AES-256-GCM encrypted credential storage
+- **Auto-refresh**: Updates instance states during transitions
+
+## Quick Start
+
+1. Download `aws_control.exe` from [Releases](../../releases)
+2. Run the executable
+3. Enter AWS credentials and click Login
+4. Select instances and use control buttons
+
+## Required AWS Permissions
 ```json
 {
   "Effect": "Allow",
@@ -26,28 +30,52 @@
     "ec2:DescribeInstanceAttribute",
     "ec2:StartInstances",
     "ec2:StopInstances",
-    "ec2:TerminateInstances"
+    "ec2:TerminateInstances",
+    "ec2:ModifyInstanceAttribute"
   ],
   "Resource": "*"
 }
 ```
 
-### c. 보안 주의사항:
-  - AWS Access Key는 제한된 권한(아래 3번 참고)만 부여하세요
-  - 자격증명은 로컬에 암호화되어 저장됩니다 (`~/.aws_ctrl_cfg`)
-  - 해당 파일을 다른 사람과 공유하지 마세요
+## Build from Source
+```bash
+# Prerequisites: Go 1.21+
 
-## 3. 라이선스
-라이선스 파일 참조
+# Clone
+git clone https://github.com/littl3-kitty/Aws_EC2_Controller.git
+cd Aws_EC2_Controller
 
-~~## 4. 미사용~~
-~~### a. 사전 준비~~
-~~1) Python 3.14.0 설치(권장)~~
-~~2) pip가 정상 작동하는지 확인 (`pip --version`)~~
+# Build
+make build-windows
 
-~~### b. EXE 파일 빌드(windows)~~
-~~```bash~~
-~~build.bat~~
-~~```~~
-~~- 첫 실행 시 필요한 패키지 자동 설치 (boto3, pyinstaller, cryptography)~~
-~~- 빌드 완료 후 `./dist/aws_instance_control.exe` 생성~~
+# Output: dist/aws_control.exe
+```
+
+## Tech Stack
+
+- **Go 1.21+**: Core language
+- **Fyne v2**: GUI framework
+- **AWS SDK v2**: EC2 management
+
+## Why Go (vs Python)?
+
+| Aspect | Python | Go |
+|--------|--------|-----|
+| Cross-compile | ❌ | ✅ Native |
+| Binary size | 50MB+ | 36MB |
+| Startup | 2-3s | Instant |
+| Jenkins | Windows VM needed | Linux only |
+
+## Security
+
+- Credentials encrypted with AES-256-GCM
+- Encryption key derived from hardware ID
+- Stored in `~/.aws_ctrl/credentials.enc`
+
+## License
+
+MIT-Based (Non-Commercial) - See [LICENSE](LICENSE)
+
+## Disclaimer
+
+⚠️ This tool can **permanently delete** EC2 instances. Use carefully!
