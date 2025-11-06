@@ -79,4 +79,3 @@ MIT-Based (Non-Commercial) - See [LICENSE](LICENSE)
 ## Disclaimer
 
 ⚠️ This tool can **permanently delete** EC2 instances. Use carefully!
-# Jenkins Auto Trigger Test - 2025-11-06 13:31:08
